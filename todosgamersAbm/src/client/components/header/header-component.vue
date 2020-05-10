@@ -2,13 +2,6 @@
   <div class=actions-header>
     <div class="main-header">
       <router-link to="/"><span>{{titleBrand}}</span></router-link>
-      <div class="search-ctn">
-        <form> 
-          <input type="text" v-model="userSearch" placeholder="Usuario">
-          <button type="submit">Buscar</button>
-        </form>
-        {{userSearch}}
-      </div>
     </div>
     <div class="nav-ctn">
       <nav>
@@ -27,8 +20,7 @@ export default {
     return {
       titleBrand: 'ABMuserS',
       addUser: 'Crear Usuario',
-      usersList: 'Lista de usuarios',
-      userSearch: ''
+      usersList: 'Lista de usuarios'
     }
   }
 }

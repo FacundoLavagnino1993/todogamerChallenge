@@ -1,37 +1,113 @@
 import Vue from 'vue'
-import vuex from 'vuex'
+import Vuex from 'vuex'
 import axios from 'axios'
 
-Vue.use(vuex, axios);
+Vue.use(Vuex, axios);
 
-export default new vuex.Store({
+export default new Vuex.Store({
   state: {
     allUsers: [],
-    errorToGetAllUser: Boolean,
-    loadingAllUser: Boolean
+    errors: {
+      getAllUser: Boolean,
+      createUser: Boolean,
+      deleteUser: Boolean,
+      editUser: Boolean
+    },
+    user: {
+      name: String,
+      lastName: String,
+      userName: String,
+      email: String
+    }
   },
   actions: {
-    getAllUsers () {
-      this.commit('GET_ALL_USERS_LOADER', true)
-      axios
-      .get('http://localhost:4300/get-all-users', {
+    addUser (type) {
+      this.commit('LOADER', { type: 'loadingCreateUser', value: true});
+
+      axios.post('http://localhost:4300/add-user', {
+        name: this.state.user.name,
+        last_name: this.state.user.lastName,
+        user_name: this.state.user.userName,
+        email: this.state.user.email
+      },{
         mode: 'no-cors',
       })
-      .then(data => {
-        this.commit('SET_ALL_USERS', data)
+      .then(response => {
+        this.commit('ERROR', { type: 'createUser', value: false });
       })
       .catch(error => {
+        this.commit('ERROR', { type: 'createUser', value: true });
         console.log(error)
       })
-      .finally(() => this.commit('GET_ALL_USERS_LOADER', false))
-    }
+      .finally(() => this.commit('LOADER', {
+        type: 'loadingCreateUser',
+        value: false
+      }))
+    },
+    deleteUser (type, payload) {
+      axios.delete(`http://localhost:4300/delete-user?id=${payload.id}`, {
+        id: payload.id,
+      },{
+        mode: 'no-cors',
+      })
+      .then(response => {
+        const users = response.data.data;
+        this.commit('SET_ALL_USERS', users)
+        this.commit('ERROR', { type: 'deleteUser', value: false });
+      })
+      .catch(error => {
+        this.commit('ERROR', { type: 'deleteUser', value: true });
+        console.log(error)
+      })
+      .finally(() => this.commit('LOADER', {
+        type: 'loadingDeleteUser',
+        value: false
+      }))
+    },
+    editUser (type, id) {
+      //this.commit('LOADER', { type: 'loadingCreateUser', value: true});
+      console.log('ID');
+      console.log(id);
+      console.log(this.state.user)
+      axios.put('http://localhost:4300/update-user', {
+        _id: id,
+        name: this.state.user.name,
+        last_name: this.state.user.lastName,
+        user_name: this.state.user.userName,
+        email: this.state.user.email
+      },{
+        mode: 'no-cors',
+      })
+      .then(response => {
+        this.commit('ERROR', { type: 'editUser', value: false });
+      })
+      .catch(error => {
+        this.commit('ERROR', { type: 'editUser', value: true });
+        console.log(error)
+      })
+      .finally(() => this.commit('LOADER', {
+        type: 'loadingCreateUser',
+        value: false
+      }))
+    } 
   },
   mutations: {
     SET_ALL_USERS (state, users) {
       state.allUsers = users
     },
-    GET_ALL_USERS_LOADER (state, loader) {
-      state.loadingAllUser = loader
+    SET_USER (state, user) {
+      state.user.name = user.name,
+      state.user.lastName = user.lastName,
+      state.user.userName = user.userName,
+      state.user.email = user.email
+    },
+    LOADER (state, payload) {
+      state[payload.type] = payload.value;
+    },
+    ERROR (state, payload) {
+      state.errors[payload.type] = payload.value;
     }
   }
+
+  
 })

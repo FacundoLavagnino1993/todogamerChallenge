@@ -6,22 +6,22 @@ const Schema = mongoose.Schema;
 const UserSchema = Schema({
   user_name: {
     type: String, 
-    require: true
+    required: true
   },
   name: {
     type: String, 
-    require: true
+    required: true
   },
   last_name: {
     type: String, 
-    require: true
+    required: true
   },
   email: {
     type: String, 
-    require: true, 
+    required: true, 
     validate: {
       validator: (text) => {
-        return text.indexOf('@') === 0;
+        return text.indexOf('@') !== -1;
       },
       message: 'Email is not valid'
     }

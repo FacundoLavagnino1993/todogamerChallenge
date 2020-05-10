@@ -4,6 +4,10 @@ Vue.use(VueRouter);
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 Vue.use(BootstrapVue, IconsPlugin)
+
+import VModal from 'vue-js-modal'
+Vue.use(VModal, { dialog: true, dynamic: true}) 
+
 import './styles/normalize.scss'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -13,6 +17,7 @@ import store from './store/store'
 import HeaderComponent from './components/header/header-component.vue'
 import UsersTableComponent from './components/usersTable/users-table-component.vue'
 import CreateUserComponent from './components/createUser/create-user-component.vue'
+import EditUserComponent from './components/editUser/edit-user-component.vue';
 
 const routes = [{
     path: '/',
@@ -23,6 +28,16 @@ const routes = [{
     },{
       path: '/create',
       component: CreateUserComponent
+    },{
+      path: '/edit-user',
+      component: EditUserComponent,
+      props: (route) => ({
+        id: route.query.id, 
+        name: route.query.name,
+        lastName: route.query.lastName,
+        userName: route.query.userName,
+        email: route.query.email
+      }) 
     }]
   }];
 
