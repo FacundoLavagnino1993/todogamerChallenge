@@ -8,6 +8,12 @@ Vue.use(BootstrapVue, IconsPlugin)
 import VModal from 'vue-js-modal'
 Vue.use(VModal, { dialog: true, dynamic: true}) 
 
+import Toasted from 'vue-toasted';
+Vue.use(Toasted);
+
+/*import VForm from 'vform';
+Vue.use(VForm)*/
+
 import './styles/normalize.scss'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -42,6 +48,8 @@ const routes = [{
   }];
 
 const router = new VueRouter({ mode: 'history', routes: routes });
+
+
 
 new Vue({
   render: h => h(App),
